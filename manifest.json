@@ -1,6 +1,6 @@
 {
-  "name": "NSF100 Setup Manager V2",
-  "short_name": "NSF100 V2",
+  "name": "NSF100 Setup Manager V2.1",
+  "short_name": "NSF100 Setup",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#07111f",
