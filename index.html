@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="NSF100 Setup">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>NSF100 Setup Manager V2.1</title>
+<title>NSF100 Setup Manager V2.2</title>
 <style>
 :root{--bg:#07111f;--card:#0f1b2d;--card2:#0b1525;--line:#23354d;--text:#eef6ff;--muted:#93a4bb;--accent:#38bdf8;--green:#22c55e;--amber:#f59e0b;--red:#ef4444}
 *{box-sizing:border-box}
@@ -47,7 +47,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px;borde
 </style>
 </head>
 <body>
-<header><h1>NSF100 Setup Manager V2.1</h1><p>変更 → 結果を追跡 / コース別ベスト / 保存済み記録を再編集</p></header>
+<header><h1>NSF100 Setup Manager V2.2</h1><p>変更 → 結果を追跡 / コース別ベスト / 保存済み記録を再編集</p></header>
 <main>
 <div class="tabs">
 <button class="tab active" data-tab="new">新規</button>
@@ -90,11 +90,18 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px;borde
 
 <h3>タイヤ</h3>
 <div class="grid4">
-<label>Fタイヤ<input id="frontTire" value="CST"></label>
+<label>Fタイヤ<select id="frontTire">
+<option>DUNLOP TT-93</option>
+<option>BS S-01</option>
+<option selected>CST Ⅱ ミディアム</option>
+</select></label>
 <label>Fタイヤ状態<select id="frontTireState"><option>新品</option><option selected>良好</option><option>摩耗</option></select></label>
 <label>F温間空気圧<input id="frontPressureHot" type="number" step="0.05" value="2.00"></label>
 <label>Fタイヤ温度 [℃]<input id="frontTemp" type="number" step="0.1"></label>
-<label>Rタイヤ<input id="rearTire" value="BT601"></label>
+<label>Rタイヤ<select id="rearTire">
+<option selected>BS BT-601</option>
+<option>CST Ⅱ</option>
+</select></label>
 <label>Rタイヤ状態<select id="rearTireState"><option>新品</option><option selected>良好</option><option>摩耗</option></select></label>
 <label>R温間空気圧<input id="rearPressureHot" type="number" step="0.05"></label>
 <label>Rタイヤ温度 [℃]<input id="rearTemp" type="number" step="0.1"></label>
@@ -104,13 +111,23 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px;borde
 <div class="grid4">
 <label>突き出し [mm]<input id="frontProtrusion" type="number" step="0.5" value="6"></label>
 <label>油面 [mm]<input id="frontOilLevel" type="number" step="1" value="75"></label>
-<label>スプリング<input id="frontSpring" value="NectO 0.6k"></label>
+<label>フロントスプリング<select id="frontSpring">
+<option selected>NECTO 0.6K</option>
+<option>Hard</option>
+<option>Standard</option>
+</select></label>
 <label>オイル粘度 [cSt]<input id="frontViscosity" type="number" step="1" value="47"></label>
 </div>
 
 <h3>リア</h3>
 <div class="grid4">
-<label>車高 [mm]<input id="rearRideHeight" type="number" step="0.5" value="221"></label>
+<label>リア車高 [mm]<input id="rearRideHeight" type="number" step="0.5" value="221"></label>
+<label>シート高 [mm]<input id="seatHeight" type="number" step="0.5"></label>
+<label>リアスプリング<select id="rearSpring">
+<option selected>KKS</option>
+<option>BESTEX</option>
+<option>ハイパコ</option>
+</select></label>
 <label>イニシャル [回転]<input id="rearPreload" type="number" step="0.25" value="3"></label>
 <label>伸び側<input id="rearRebound" type="number" step="1" value="2"></label>
 <label>圧側<input id="rearCompression" type="number" step="1" value="0"></label>
@@ -123,6 +140,30 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px;borde
 <label>F 1G'沈み量 [mm]<input id="frontSag1GDash" type="number" step="0.1"></label>
 <label>R 1G沈み量 [mm]<input id="rearSag1G" type="number" step="0.1"></label>
 <label>R 1G'沈み量 [mm]<input id="rearSag1GDash" type="number" step="0.1"></label>
+</div>
+
+<h3>現在の前後高さバランス</h3>
+<div class="notice">1G / 1G'沈み量とシート高・リア車高から、前後姿勢の変化を簡易表示します。実際のキャスター角や重心位置を算出する図ではありません。</div>
+<div class="balance-panel" style="margin-top:10px;background:#081321;border:1px solid #22344c;border-radius:14px;padding:10px">
+<svg id="balanceSvg" viewBox="0 0 720 260" style="width:100%;height:auto;max-height:300px">
+  <line x1="40" y1="220" x2="680" y2="220" stroke="#475569" stroke-width="3"/>
+  <circle cx="170" cy="204" r="42" fill="none" stroke="#cbd5e1" stroke-width="6"/>
+  <circle cx="550" cy="204" r="42" fill="none" stroke="#cbd5e1" stroke-width="6"/>
+  <line id="bikeFrame" x1="170" y1="135" x2="550" y2="120" stroke="#38bdf8" stroke-width="12" stroke-linecap="round"/>
+  <line id="frontFork" x1="170" y1="204" x2="205" y2="122" stroke="#94a3b8" stroke-width="8"/>
+  <line id="rearLink" x1="550" y1="204" x2="500" y2="125" stroke="#94a3b8" stroke-width="8"/>
+  <circle id="seatPoint" cx="450" cy="105" r="10" fill="#22c55e"/>
+  <text x="120" y="255" fill="#cbd5e1" font-size="18">FRONT</text>
+  <text x="520" y="255" fill="#cbd5e1" font-size="18">REAR</text>
+  <text id="balanceText" x="360" y="35" text-anchor="middle" fill="#f8fafc" font-size="22" font-weight="700">入力すると姿勢を表示</text>
+  <text id="balanceSub" x="360" y="62" text-anchor="middle" fill="#94a3b8" font-size="15"></text>
+</svg>
+<div class="metrics">
+  <div class="metric"><span>F 1G → 1G'</span><b id="frontSagDelta">-</b></div>
+  <div class="metric"><span>R 1G → 1G'</span><b id="rearSagDelta">-</b></div>
+  <div class="metric"><span>相対姿勢</span><b id="balanceState">-</b></div>
+  <div class="metric"><span>シート高</span><b id="seatHeightDisplay">-</b></div>
+</div>
 </div>
 
 <h3>エンジン・駆動</h3>
@@ -211,16 +252,21 @@ table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px;borde
 const KEY="nsf100_setup_v2_records"; // V2と同じ保存領域。既存記録を保持。
 let editingId=null;
 
-const setupFields=["frontTire","frontTireState","frontPressureHot","rearTire","rearTireState","rearPressureHot","frontProtrusion","frontOilLevel","frontSpring","frontViscosity","rearRideHeight","rearPreload","rearRebound","rearCompression","frontSag1G","frontSag1GDash","rearSag1G","rearSag1GDash","mj","sj","airScrew","idleRpm","finalDrive","engineOil"];
-const allFields=["date","circuit","session","bestLap","avgLap","laps","airTemp","trackTemp","humidity","pressure","surface","wind","frontTire","frontTireState","frontPressureHot","frontTemp","rearTire","rearTireState","rearPressureHot","rearTemp","frontProtrusion","frontOilLevel","frontSpring","frontViscosity","rearRideHeight","rearPreload","rearRebound","rearCompression","frontSag1G","frontSag1GDash","rearSag1G","rearSag1GDash","mj","sj","airScrew","idleRpm","finalDrive","engineOil","maxSpeed","maxRpm","entryFeel","cornerFeel","exitFeel","symptoms","changes","result","nextPlan","memo"];
-const labels={frontTire:"Fタイヤ",frontTireState:"F状態",frontPressureHot:"F温間",rearTire:"Rタイヤ",rearTireState:"R状態",rearPressureHot:"R温間",frontProtrusion:"F突き出し",frontOilLevel:"F油面",frontSpring:"Fバネ",frontViscosity:"F粘度",rearRideHeight:"R車高",rearPreload:"Rイニシャル",rearRebound:"R伸び",rearCompression:"R圧",frontSag1G:"F 1G",frontSag1GDash:"F 1G'",rearSag1G:"R 1G",rearSag1GDash:"R 1G'",mj:"MJ",sj:"SJ",airScrew:"AS",idleRpm:"アイドル",finalDrive:"ファイナル",engineOil:"オイル"};
+const setupFields=["frontTire","frontTireState","frontPressureHot","rearTire","rearTireState","rearPressureHot","frontProtrusion","frontOilLevel","frontSpring","frontViscosity","rearRideHeight","seatHeight","rearSpring","rearPreload","rearRebound","rearCompression","frontSag1G","frontSag1GDash","rearSag1G","rearSag1GDash","mj","sj","airScrew","idleRpm","finalDrive","engineOil"];
+const allFields=["date","circuit","session","bestLap","avgLap","laps","airTemp","trackTemp","humidity","pressure","surface","wind","frontTire","frontTireState","frontPressureHot","frontTemp","rearTire","rearTireState","rearPressureHot","rearTemp","frontProtrusion","frontOilLevel","frontSpring","frontViscosity","rearRideHeight","seatHeight","rearSpring","rearPreload","rearRebound","rearCompression","frontSag1G","frontSag1GDash","rearSag1G","rearSag1GDash","mj","sj","airScrew","idleRpm","finalDrive","engineOil","maxSpeed","maxRpm","entryFeel","cornerFeel","exitFeel","symptoms","changes","result","nextPlan","memo"];
+const labels={frontTire:"Fタイヤ",frontTireState:"F状態",frontPressureHot:"F温間",rearTire:"Rタイヤ",rearTireState:"R状態",rearPressureHot:"R温間",frontProtrusion:"F突き出し",frontOilLevel:"F油面",frontSpring:"Fバネ",frontViscosity:"F粘度",rearRideHeight:"R車高",seatHeight:"シート高",rearSpring:"Rスプリング",rearPreload:"Rイニシャル",rearRebound:"R伸び",rearCompression:"R圧",frontSag1G:"F 1G",frontSag1GDash:"F 1G'",rearSag1G:"R 1G",rearSag1GDash:"R 1G'",mj:"MJ",sj:"SJ",airScrew:"AS",idleRpm:"アイドル",finalDrive:"ファイナル",engineOil:"オイル"};
 
 function migrate(r){
-  // V2 -> V2.1 compatibility
+  // V2 -> V2.2 compatibility
   if(r.frontPressureHot==null || r.frontPressureHot==="") r.frontPressureHot=r.frontPressurePre||r.frontPressurePost||"";
   if(r.rearPressureHot==null || r.rearPressureHot==="") r.rearPressureHot=r.rearPressurePre||r.rearPressurePost||"";
   if(!r.frontTireState) r.frontTireState="良好";
   if(!r.rearTireState) r.rearTireState="良好";
+  if(!r.frontTire || r.frontTire==="CST") r.frontTire="CST Ⅱ ミディアム";
+  if(!r.rearTire || r.rearTire==="BT601") r.rearTire="BS BT-601";
+  if(r.frontSpring==="NectO 0.6k" || !r.frontSpring) r.frontSpring="NECTO 0.6K";
+  if(r.seatHeight==null) r.seatHeight="";
+  if(!r.rearSpring) r.rearSpring="KKS";
   if(r.frontSag1G==null) r.frontSag1G="";
   if(r.frontSag1GDash==null) r.frontSag1GDash="";
   if(r.rearSag1G==null) r.rearSag1G="";
@@ -276,10 +322,10 @@ function resetForm(){
  document.getElementById("saveBtn").textContent="この走行を保存";
  allFields.forEach(f=>sv(f,""));
  sv("date",today());sv("circuit","近畿スポーツランド");sv("session","1本目");
- sv("frontTire","CST");sv("frontTireState","良好");sv("frontPressureHot","2.00");
- sv("rearTire","BT601");sv("rearTireState","良好");
- sv("frontProtrusion","6");sv("frontOilLevel","75");sv("frontSpring","NectO 0.6k");sv("frontViscosity","47");
- sv("rearRideHeight","221");sv("rearPreload","3");sv("rearRebound","2");sv("rearCompression","0");
+ sv("frontTire","CST Ⅱ ミディアム");sv("frontTireState","良好");sv("frontPressureHot","2.00");
+ sv("rearTire","BS BT-601");sv("rearTireState","良好");
+ sv("frontProtrusion","6");sv("frontOilLevel","75");sv("frontSpring","NECTO 0.6K");sv("frontViscosity","47");
+ sv("rearRideHeight","221");sv("seatHeight","");sv("rearSpring","KKS");sv("rearPreload","3");sv("rearRebound","2");sv("rearCompression","0");
  sv("mj","105");sv("sj","27.5");sv("idleRpm","2000");sv("finalDrive","15-38");
  sv("entryFeel","普通");sv("cornerFeel","普通");sv("exitFeel","普通"); updateAutoDiff();
 }
@@ -355,7 +401,7 @@ function renderBest(){
  <div class="metric"><span>Fタイヤ</span><b>${esc(best.frontTire)} / ${esc(best.frontTireState)}</b></div>
  <div class="metric"><span>F温間</span><b>${esc(best.frontPressureHot||"-")}</b></div>
  <div class="metric"><span>F突 / 油面</span><b>${esc(best.frontProtrusion||"-")} / ${esc(best.frontOilLevel||"-")}</b></div>
- <div class="metric"><span>R車高 / preload</span><b>${esc(best.rearRideHeight||"-")} / ${esc(best.rearPreload||"-")}</b></div>
+ <div class="metric"><span>R車高 / シート高</span><b>${esc(best.rearRideHeight||"-")} / ${esc(best.seatHeight||"-")}</b></div><div class="metric"><span>Rバネ / preload</span><b>${esc(best.rearSpring||"-")} / ${esc(best.rearPreload||"-")}</b></div>
  <div class="metric"><span>F 1G / 1G'</span><b>${esc(best.frontSag1G||"-")} / ${esc(best.frontSag1GDash||"-")}</b></div>
  <div class="metric"><span>R 1G / 1G'</span><b>${esc(best.rearSag1G||"-")} / ${esc(best.rearSag1GDash||"-")}</b></div>
  <div class="metric"><span>MJ / SJ</span><b>${esc(best.mj||"-")} / ${esc(best.sj||"-")}</b></div>
@@ -378,7 +424,7 @@ function renderCompare(){
  const arr=load(),a=document.getElementById("compareA"),b=document.getElementById("compareB"),oa=a.value,ob=b.value;
  a.innerHTML=arr.map((r,i)=>`<option value="${i}">${esc(recordLabel(r))}</option>`).join("");b.innerHTML=arr.map((r,i)=>`<option value="${i}">${esc(recordLabel(r))}</option>`).join("");if(oa)a.value=oa;if(ob)b.value=ob;else if(arr.length>1)b.value=1;drawCompare();
 }
-const cmp=[["bestLap","ベスト"],["airTemp","気温"],["trackTemp","路温"],["humidity","湿度"],["pressure","気圧"],["frontTire","Fタイヤ"],["frontTireState","F状態"],["frontPressureHot","F温間"],["rearTire","Rタイヤ"],["rearTireState","R状態"],["rearPressureHot","R温間"],["frontProtrusion","F突"],["frontOilLevel","F油面"],["rearRideHeight","R車高"],["rearPreload","R preload"],["rearRebound","R伸び"],["rearCompression","R圧"],["frontSag1G","F 1G"],["frontSag1GDash","F 1G'"],["rearSag1G","R 1G"],["rearSag1GDash","R 1G'"],["mj","MJ"],["sj","SJ"],["finalDrive","ファイナル"],["maxSpeed","最高速"],["maxRpm","最高RPM"]];
+const cmp=[["bestLap","ベスト"],["airTemp","気温"],["trackTemp","路温"],["humidity","湿度"],["pressure","気圧"],["frontTire","Fタイヤ"],["frontTireState","F状態"],["frontPressureHot","F温間"],["rearTire","Rタイヤ"],["rearTireState","R状態"],["rearPressureHot","R温間"],["frontProtrusion","F突"],["frontOilLevel","F油面"],["frontSpring","Fスプリング"],["rearRideHeight","R車高"],["seatHeight","シート高"],["rearSpring","Rスプリング"],["rearPreload","R preload"],["rearRebound","R伸び"],["rearCompression","R圧"],["frontSag1G","F 1G"],["frontSag1GDash","F 1G'"],["rearSag1G","R 1G"],["rearSag1GDash","R 1G'"],["mj","MJ"],["sj","SJ"],["finalDrive","ファイナル"],["maxSpeed","最高速"],["maxRpm","最高RPM"]];
 function drawCompare(){const arr=load();if(arr.length<2){document.getElementById("compareResult").innerHTML='<p class="small">2件以上必要です。</p>';return}const A=arr[+v("compareA")],B=arr[+v("compareB")];
  document.getElementById("compareResult").innerHTML=`<table><tr><th>項目</th><th>A</th><th>B</th></tr>${cmp.map(([k,l])=>`<tr><td>${l}</td><td>${esc(A?.[k]||"-")}</td><td>${esc(B?.[k]||"-")}</td></tr>`).join("")}</table><h3>変更・結果</h3><p><b>A変更:</b> ${esc(A?.changes||"-")}</p><p><b>A結果:</b> ${esc(A?.result||"-")}</p><p><b>B変更:</b> ${esc(B?.changes||"-")}</p><p><b>B結果:</b> ${esc(B?.result||"-")}</p>`}
 document.getElementById("compareA").onchange=drawCompare;document.getElementById("compareB").onchange=drawCompare;
@@ -390,7 +436,52 @@ function parseCSV(text){let rows=[],row=[],cur="",q=false;for(let i=0;i<text.len
 document.getElementById("importFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;const rows=parseCSV((await f.text()).replace(/^\uFEFF/,"")),h=rows[0],arr=rows.slice(1).filter(r=>r.some(x=>x)).map(r=>{let o={};h.forEach((k,i)=>o[k]=r[i]??"");o.id=+o.id||Date.now()+Math.random();o.autoChanges=(o.autoChanges||"").split(" | ").filter(Boolean);return migrate(o)});store(arr);alert(`${arr.length}件読み込みました`);refresh()}
 document.getElementById("clearAllBtn").onclick=()=>{if(confirm("全データ削除しますか？")){localStorage.removeItem(KEY);resetForm();refresh()}}
 
-function refresh(){renderFilters();renderHistory();renderBest();renderCompare();updateAutoDiff()}
+
+function nval(id){const n=parseFloat(v(id));return Number.isFinite(n)?n:null}
+function updateBalanceDiagram(){
+  const f1=nval("frontSag1G"), fd=nval("frontSag1GDash");
+  const r1=nval("rearSag1G"), rd=nval("rearSag1GDash");
+  const sh=nval("seatHeight"), rh=nval("rearRideHeight");
+  const fDelta=(f1!=null&&fd!=null)?fd-f1:null;
+  const rDelta=(r1!=null&&rd!=null)?rd-r1:null;
+
+  document.getElementById("frontSagDelta").textContent=fDelta==null?"-":`${fDelta.toFixed(1)} mm`;
+  document.getElementById("rearSagDelta").textContent=rDelta==null?"-":`${rDelta.toFixed(1)} mm`;
+  document.getElementById("seatHeightDisplay").textContent=sh==null?"-":`${sh.toFixed(1)} mm`;
+
+  let frontY=135, rearY=120;
+  if(fDelta!=null) frontY += Math.max(-28,Math.min(28,fDelta*2.2));
+  if(rDelta!=null) rearY += Math.max(-28,Math.min(28,rDelta*2.2));
+  // rear ride/seat height give a small static visual bias, only for comparison.
+  if(rh!=null) rearY -= Math.max(-14,Math.min(14,(rh-221)*2.5));
+  if(sh!=null) rearY -= Math.max(-10,Math.min(10,(sh-735)*0.12));
+
+  const frame=document.getElementById("bikeFrame");
+  frame.setAttribute("y1",frontY); frame.setAttribute("y2",rearY);
+  document.getElementById("frontFork").setAttribute("y2",frontY-13);
+  document.getElementById("rearLink").setAttribute("y2",rearY+5);
+  const seatX=450;
+  const seatY=rearY-15;
+  document.getElementById("seatPoint").setAttribute("cy",seatY);
+
+  let state="入力不足", main="前後バランス";
+  if(fDelta!=null&&rDelta!=null){
+    const diff=rDelta-fDelta;
+    if(diff>2){state="リア沈み多め";main="加速時にリア下がり方向";}
+    else if(diff<-2){state="フロント沈み多め";main="前下がり方向";}
+    else {state="ほぼフラット";main="前後バランスは近い";}
+    document.getElementById("balanceSub").textContent=`1G→1G'差：F ${fDelta.toFixed(1)} / R ${rDelta.toFixed(1)} mm`;
+  }else{
+    document.getElementById("balanceSub").textContent="1G・1G'を入力してください";
+  }
+  document.getElementById("balanceState").textContent=state;
+  document.getElementById("balanceText").textContent=main;
+}
+["frontSag1G","frontSag1GDash","rearSag1G","rearSag1GDash","seatHeight","rearRideHeight"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("input",updateBalanceDiagram);
+});
+
+function refresh(){renderFilters();renderHistory();renderBest();renderCompare();updateAutoDiff();updateBalanceDiagram()}
 refresh();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
