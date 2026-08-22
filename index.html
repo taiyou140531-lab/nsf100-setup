@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<title>NSF100 Setup Manager V3.2 Cloud</title>
+<title>NSF100 Setup Manager V3.3 Cloud</title>
 <style>
 :root{--bg:#07111f;--card:#0f1b2d;--card2:#0b1525;--line:#23354d;--text:#eef6ff;--muted:#93a4bb;--accent:#38bdf8}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;padding-bottom:90px}
@@ -33,7 +33,7 @@ textarea{min-height:72px;resize:vertical}.btn{border:0;border-radius:11px;paddin
 </style>
 </head>
 <body>
-<header><h1>NSF100 Setup Manager V3.2 Cloud</h1><p>iPhone / iPad / PC 自動同期</p></header>
+<header><h1>NSF100 Setup Manager V3.3 Cloud</h1><p>iPhone / iPad / PC 自動同期</p></header>
 <main>
 <div class="card">
 <h2>クラウド同期</h2>
@@ -74,86 +74,69 @@ textarea{min-height:72px;resize:vertical}.btn{border:0;border-radius:11px;paddin
 <div class="grid4"><label>F 1G [mm]<input id="frontSag1G" type="number" step="0.1"></label><label>F 1G' [mm]<input id="frontSag1GDash" type="number" step="0.1"></label><label>R 1G [mm]<input id="rearSag1G" type="number" step="0.1"></label><label>R 1G' [mm]<input id="rearSag1GDash" type="number" step="0.1"></label></div>
 
 <h3>車体バランス図（NSF100 サイドビュー）</h3>
-<div class="notice">Honda HRC公表値（ホイールベース 1,074 mm、シート高 681 mm、キャスター 23°36′）を基準形状にした比較用模式図です。青＝現在セット、破線＝基準セット。入力値による変化はセット比較用の近似表示です。</div>
-<div style="margin-top:10px;background:linear-gradient(180deg,#0b1728,#07111f);border:1px solid #29415f;border-radius:16px;padding:12px;overflow:hidden">
-<svg id="balanceSvg" viewBox="0 0 900 430" style="width:100%;height:auto">
- <defs>
-  <linearGradient id="fairingG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset=".55" stop-color="#cbd5e1"/><stop offset="1" stop-color="#64748b"/></linearGradient>
-  <linearGradient id="tankG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset="1" stop-color="#64748b"/></linearGradient>
- </defs>
- <!-- ground/reference -->
- <line x1="55" y1="355" x2="845" y2="355" stroke="#334155" stroke-width="3"/>
- <line x1="205" y1="75" x2="205" y2="375" stroke="#334155" stroke-dasharray="7 7"/>
- <line x1="695" y1="75" x2="695" y2="375" stroke="#334155" stroke-dasharray="7 7"/>
- <line x1="205" y1="390" x2="695" y2="390" stroke="#64748b" stroke-width="2"/>
- <path d="M205 390 l12 -7 v14z M695 390 l-12 -7 v14z" fill="#64748b"/>
- <text x="450" y="414" text-anchor="middle" fill="#94a3b8" font-size="17">ホイールベース 1,074 mm</text>
-
- <!-- baseline -->
- <line id="baseFrame" x1="250" y1="245" x2="635" y2="205" stroke="#64748b" stroke-width="4" stroke-dasharray="10 8" opacity=".75"/>
- <line x1="205" y1="355" x2="245" y2="210" stroke="#64748b" stroke-width="4" stroke-dasharray="9 7" opacity=".7"/>
- <line x1="695" y1="355" x2="640" y2="190" stroke="#64748b" stroke-width="4" stroke-dasharray="9 7" opacity=".7"/>
-
- <!-- wheels -->
- <g>
-  <circle cx="205" cy="326" r="82" fill="#05090f" stroke="#475569" stroke-width="8"/>
-  <circle cx="205" cy="326" r="55" fill="#111827" stroke="#94a3b8" stroke-width="5"/>
-  <circle cx="205" cy="326" r="18" fill="#94a3b8"/>
-  <circle cx="695" cy="326" r="76" fill="#05090f" stroke="#475569" stroke-width="8"/>
-  <circle cx="695" cy="326" r="51" fill="#111827" stroke="#94a3b8" stroke-width="5"/>
-  <circle cx="695" cy="326" r="17" fill="#94a3b8"/>
-  <circle cx="695" cy="326" r="38" fill="none" stroke="#64748b" stroke-width="4"/>
- </g>
-
- <!-- motorcycle current-set group -->
- <g id="bikeCurrent">
-   <!-- swingarm -->
-   <path id="swingArm" d="M205 326 L430 287 L445 304 L205 326" fill="#64748b" stroke="#94a3b8" stroke-width="3"/>
-   <!-- frame -->
-   <path id="frameShape" d="M425 285 L335 205 L520 195 L585 245 L445 305 Z" fill="#334155" stroke="#38bdf8" stroke-width="4"/>
-   <!-- engine -->
-   <circle cx="447" cy="269" r="45" fill="#202a38" stroke="#94a3b8" stroke-width="4"/>
-   <circle cx="447" cy="269" r="25" fill="#475569"/>
-   <!-- rear shock -->
-   <line x1="350" y1="216" x2="414" y2="287" stroke="#f59e0b" stroke-width="9"/>
-   <line x1="350" y1="216" x2="414" y2="287" stroke="#f8fafc" stroke-width="2" stroke-dasharray="5 5"/>
-   <!-- fork -->
-   <line id="fork1" x1="625" y1="184" x2="684" y2="326" stroke="#d4a017" stroke-width="12"/>
-   <line id="fork2" x1="642" y1="180" x2="702" y2="326" stroke="#94a3b8" stroke-width="8"/>
-   <!-- tank -->
-   <path id="tank" d="M385 180 Q430 135 525 157 Q555 164 566 194 L516 215 L405 211 Z" fill="url(#tankG)" stroke="#e2e8f0" stroke-width="3"/>
-   <!-- seat/tail -->
-   <path id="seatTail" d="M238 183 Q315 168 398 191 L383 218 L275 214 L222 196 Z" fill="#111827" stroke="#cbd5e1" stroke-width="3"/>
-   <path d="M230 182 L330 163 L379 181 L314 190 Z" fill="#e2e8f0" opacity=".9"/>
-   <!-- fairing -->
-   <path id="fairing" d="M520 202 Q592 168 668 190 L710 222 L684 278 L592 292 L525 264 L555 233 Z" fill="url(#fairingG)" stroke="#e2e8f0" stroke-width="3"/>
-   <path d="M620 181 Q652 136 682 172 L670 195 Z" fill="#7dd3fc" opacity=".55" stroke="#bae6fd" stroke-width="2"/>
-   <path d="M568 224 L649 214 L618 259 L551 258 Z" fill="#0f172a" opacity=".8"/>
-   <!-- bars -->
-   <line x1="624" y1="184" x2="599" y2="174" stroke="#cbd5e1" stroke-width="6"/>
-   <!-- exhaust -->
-   <path d="M430 306 Q340 330 286 273 L239 247" fill="none" stroke="#94a3b8" stroke-width="9"/>
-   <rect x="215" y="230" width="88" height="22" rx="9" fill="#64748b" transform="rotate(8 215 230)"/>
-   <!-- accents -->
-   <path d="M558 235 L651 221" stroke="#ef4444" stroke-width="5"/>
-   <text x="587" y="253" fill="#0f172a" font-size="28" font-weight="900" transform="rotate(-7 587 253)">NSF</text>
- </g>
-
- <!-- dimensions -->
- <line id="seatDim" x1="300" y1="355" x2="300" y2="184" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 4"/>
- <text id="seatDimText" x="310" y="272" fill="#7dd3fc" font-size="16">シート高 681 mm 基準</text>
- <line id="pitchLine" x1="265" y1="158" x2="655" y2="158" stroke="#64748b" stroke-dasharray="7 6"/>
- <line id="currentPitchLine" x1="265" y1="158" x2="655" y2="158" stroke="#38bdf8" stroke-width="3"/>
- <text id="balanceText" x="450" y="38" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="800">現在セットの姿勢</text>
- <text id="balanceSub" x="450" y="66" text-anchor="middle" fill="#94a3b8" font-size="15">Honda HRC標準諸元を基準に表示</text>
- <text x="63" y="344" fill="#94a3b8" font-size="14">REAR</text><text x="755" y="344" fill="#94a3b8" font-size="14">FRONT</text>
-</svg>
-<div class="metrics">
- <div class="metric"><span>F 1G→1G'</span><b id="frontSagDelta">-</b></div>
- <div class="metric"><span>R 1G→1G'</span><b id="rearSagDelta">-</b></div>
- <div class="metric"><span>相対姿勢</span><b id="balanceState">-</b></div>
- <div class="metric"><span>シート高</span><b id="seatHeightDisplay">-</b></div>
+<div class="notice">
+Honda HRC公表値（ホイールベース 1,074 mm、シート高 681 mm、キャスター 23°36′）を基準にした比較表示です。
+車体画像は実車イメージ寄り、青線＝現在セット、破線＝基準セットです。
 </div>
+
+<div style="margin-top:10px;background:linear-gradient(180deg,#0b1728,#07111f);border:1px solid #29415f;border-radius:16px;padding:12px">
+  <div id="bikeBalanceWrap" style="position:relative;width:100%;max-width:860px;margin:auto;aspect-ratio:16/9;overflow:hidden;border-radius:14px;background:#081321">
+    <img id="bikePhoto" src="nsf100-side.png"
+         style="position:absolute;left:11%;top:18%;width:78%;height:auto;object-fit:contain;transform-origin:50% 78%;filter:drop-shadow(0 12px 14px rgba(0,0,0,.45));">
+
+    <!-- baseline/current pitch -->
+    <div id="basePitch"
+         style="position:absolute;left:9%;right:9%;top:48%;border-top:2px dashed #64748b;opacity:.75"></div>
+    <div id="currentPitch"
+         style="position:absolute;left:9%;right:9%;top:48%;border-top:3px solid #38bdf8;transform-origin:50% 50%"></div>
+
+    <!-- wheelbase dimension -->
+    <div style="position:absolute;left:24%;right:24%;bottom:7%;border-top:2px solid #64748b"></div>
+    <div style="position:absolute;left:24%;bottom:5%;height:18px;border-left:2px solid #64748b"></div>
+    <div style="position:absolute;right:24%;bottom:5%;height:18px;border-left:2px solid #64748b"></div>
+    <div style="position:absolute;left:37%;bottom:1.5%;font-size:12px;color:#94a3b8">ホイールベース 1,074 mm</div>
+
+    <!-- front / rear reference -->
+    <div style="position:absolute;left:23%;top:18%;bottom:12%;border-left:1px dashed #334155"></div>
+    <div style="position:absolute;right:23%;top:18%;bottom:12%;border-left:1px dashed #334155"></div>
+
+    <!-- seat height -->
+    <div id="seatHeightLine"
+         style="position:absolute;left:30%;bottom:14%;height:48%;border-left:2px solid #38bdf8"></div>
+    <div id="seatHeightLabel"
+         style="position:absolute;left:31.5%;top:32%;font-size:12px;color:#7dd3fc">シート高 681 mm 基準</div>
+
+    <!-- front height -->
+    <div id="frontHeightLine"
+         style="position:absolute;right:18%;bottom:14%;height:44%;border-left:2px solid #38bdf8"></div>
+
+    <!-- top text -->
+    <div id="balanceText"
+         style="position:absolute;top:3%;left:0;right:0;text-align:center;font-size:18px;font-weight:800;color:#f8fafc">
+         現在セットの姿勢
+    </div>
+    <div id="balanceSub"
+         style="position:absolute;top:10%;left:5%;right:5%;text-align:center;font-size:11px;color:#94a3b8">
+         Honda HRC標準諸元を基準に表示
+    </div>
+
+    <!-- setup annotations -->
+    <div id="frontSetupLabel"
+         style="position:absolute;right:3%;top:27%;padding:6px 8px;border-radius:8px;background:rgba(7,17,31,.78);color:#7dd3fc;font-size:12px">
+         F突 6 mm
+    </div>
+    <div id="rearSetupLabel"
+         style="position:absolute;left:2%;bottom:28%;padding:6px 8px;border-radius:8px;background:rgba(7,17,31,.78);color:#7dd3fc;font-size:12px">
+         R車高 221 mm
+    </div>
+  </div>
+
+  <div class="metrics" style="margin-top:10px">
+    <div class="metric"><span>F 1G→1G'</span><b id="frontSagDelta">-</b></div>
+    <div class="metric"><span>R 1G→1G'</span><b id="rearSagDelta">-</b></div>
+    <div class="metric"><span>相対姿勢</span><b id="balanceState">-</b></div>
+    <div class="metric"><span>シート高</span><b id="seatHeightDisplay">-</b></div>
+  </div>
 </div>
 <h3>エンジン・駆動</h3>
 <div class="grid4"><label>MJ<input id="mj" value="105"></label><label>SJ<input id="sj" value="27.5"></label><label>AS戻し<input id="airScrew"></label><label>アイドル [rpm]<input id="idleRpm" type="number" step="50" value="2000"></label><label>ファイナル<input id="finalDrive" value="15-38"></label><label>エンジンオイル<input id="engineOil"></label><label>最高速 [km/h]<input id="maxSpeed" type="number" step="0.1"></label><label>最高RPM<input id="maxRpm" type="number" step="100"></label></div>
@@ -282,34 +265,49 @@ function renderCompare(){const arr=load(),A=document.getElementById("compareA"),
 function drawCompare(){const arr=load();if(arr.length<2){document.getElementById("compareResult").innerHTML='<p class="small">2件以上必要</p>';return}const a=arr[+v("compareA")],b=arr[+v("compareB")];document.getElementById("compareResult").innerHTML=`<table><tr><th>項目</th><th>A</th><th>B</th></tr>${cmp.map(k=>`<tr><td>${esc(labels[k]||k)}</td><td>${esc(a?.[k]||"-")}</td><td>${esc(b?.[k]||"-")}</td></tr>`).join("")}</table>`}
 document.getElementById("compareA").onchange=drawCompare;document.getElementById("compareB").onchange=drawCompare;
 function updateBalance(){
- const f1=num(v("frontSag1G")),fd=num(v("frontSag1GDash")),r1=num(v("rearSag1G")),rd=num(v("rearSag1GDash"));
+ const f1=num(v("frontSag1G")),fd=num(v("frontSag1GDash")),
+       r1=num(v("rearSag1G")),rd=num(v("rearSag1GDash"));
  const sh=num(v("seatHeight")),rh=num(v("rearRideHeight")),prot=num(v("frontProtrusion"));
- const fD=f1!=null&&fd!=null?fd-f1:null,rD=r1!=null&&rd!=null?rd-r1:null;
- document.getElementById("frontSagDelta").textContent=fD==null?"-":fD.toFixed(1)+" mm";
- document.getElementById("rearSagDelta").textContent=rD==null?"-":rD.toFixed(1)+" mm";
- document.getElementById("seatHeightDisplay").textContent=sh==null?"-":sh.toFixed(1)+" mm";
 
- // Visual pitch estimate for setup comparison only:
- // rear ride height raises rear; fork protrusion lowers front; rider sag difference changes dynamic attitude.
+ const fD=(f1!=null&&fd!=null)?fd-f1:null;
+ const rD=(r1!=null&&rd!=null)?rd-r1:null;
+
+ document.getElementById("frontSagDelta").textContent=fD==null?"-":`${fD.toFixed(1)} mm`;
+ document.getElementById("rearSagDelta").textContent=rD==null?"-":`${rD.toFixed(1)} mm`;
+ document.getElementById("seatHeightDisplay").textContent=sh==null?"-":`${sh.toFixed(1)} mm`;
+
+ // Comparison-only visual estimate, not a measured chassis angle.
  const rearChange=(rh==null?0:rh-221);
  const frontChange=(prot==null?0:prot-6);
- const dynamic=(fD!=null&&rD!=null)?(rD-fD)*0.20:0;
- const pitchDeg=(rearChange+frontChange)*0.055 + dynamic*0.055;
- const clamped=Math.max(-2.5,Math.min(2.5,pitchDeg));
- const g=document.getElementById("bikeCurrent");
- g.setAttribute("transform",`rotate(${-clamped} 450 326)`);
- const rad=(-clamped)*Math.PI/180, x1=265,x2=655,y=158;
- const y1=y+(x1-450)*Math.tan(rad), y2=y+(x2-450)*Math.tan(rad);
- const pl=document.getElementById("currentPitchLine");pl.setAttribute("x1",x1);pl.setAttribute("y1",y1);pl.setAttribute("x2",x2);pl.setAttribute("y2",y2);
+ const sagBias=(fD!=null&&rD!=null)?(rD-fD)*0.18:0;
+ const pitchDeg=Math.max(-2.0,Math.min(2.0,(rearChange+frontChange)*0.055+sagBias*0.055));
+
+ const img=document.getElementById("bikePhoto");
+ img.style.transform=`rotate(${-pitchDeg}deg)`;
+
+ const pitch=document.getElementById("currentPitch");
+ pitch.style.transform=`rotate(${-pitchDeg}deg)`;
 
  let state="基準付近";
- if(clamped>0.12) state="フロント低め";
- else if(clamped<-0.12) state="リア低め";
+ if(pitchDeg>0.12) state="フロント低め";
+ else if(pitchDeg<-0.12) state="リア低め";
+
  document.getElementById("balanceState").textContent=state;
- document.getElementById("balanceText").textContent=`車体姿勢 ${clamped>=0?"+":""}${clamped.toFixed(2)}°`;
- document.getElementById("balanceSub").textContent=`基準：WB 1,074 mm / Seat 681 mm / Caster 23°36′　・　現在：F突 ${prot??"-"} mm / R車高 ${rh??"-"} mm`;
- const st=document.getElementById("seatDimText");
- st.textContent=sh==null?"シート高 681 mm 基準":`入力シート高 ${sh.toFixed(1)} mm（標準681 mm）`;
+ document.getElementById("balanceText").textContent=`車体姿勢 ${pitchDeg>=0?"+":""}${pitchDeg.toFixed(2)}°`;
+ document.getElementById("balanceSub").textContent=
+   `基準 WB 1,074 mm / Seat 681 mm / Caster 23°36′　現在 F突 ${prot??"-"} mm / R車高 ${rh??"-"} mm`;
+
+ document.getElementById("frontSetupLabel").textContent=`F突 ${prot??"-"} mm`;
+ document.getElementById("rearSetupLabel").textContent=`R車高 ${rh??"-"} mm`;
+
+ const seatLabel=document.getElementById("seatHeightLabel");
+ seatLabel.textContent=sh==null?"シート高 681 mm 基準":`シート高 ${sh.toFixed(1)} mm（標準681）`;
+
+ const seatLine=document.getElementById("seatHeightLine");
+ if(sh!=null){
+   const diff=Math.max(-80,Math.min(80,sh-681));
+   seatLine.style.height=`${48+diff*0.12}%`;
+ }
 }["frontSag1G","frontSag1GDash","rearSag1G","rearSag1GDash","seatHeight","rearRideHeight"].forEach(id=>document.getElementById(id).addEventListener("input",updateBalance));
 function csvEsc(s){return `"${String(s??"").replaceAll('"','""')}"`}document.getElementById("exportBtn").onclick=()=>{const arr=load(),h=["id",...allFields],csv=[h.join(","),...arr.map(r=>h.map(k=>csvEsc(r[k])).join(","))].join("\r\n"),blob=new Blob(["\ufeff"+csv],{type:"text/csv"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`nsf100_v3_${today()}.csv`;a.click();URL.revokeObjectURL(url)}
 function parseCSV(t){let rows=[],row=[],cur="",q=false;for(let i=0;i<t.length;i++){let ch=t[i];if(q){if(ch=='"'&&t[i+1]=='"'){cur+='"';i++}else if(ch=='"')q=false;else cur+=ch}else{if(ch=='"')q=true;else if(ch==","){row.push(cur);cur=""}else if(ch=="\n"){row.push(cur.replace(/\r$/,""));rows.push(row);row=[];cur=""}else cur+=ch}}if(cur||row.length){row.push(cur);rows.push(row)}return rows}
